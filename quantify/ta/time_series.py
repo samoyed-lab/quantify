@@ -1,4 +1,6 @@
 import pandas as pd
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 
 class TimeSeries:
@@ -60,7 +62,7 @@ class TimeSeries:
                     f' got {sizes}'
                 )
 
-        else:
+        else: # input as index to `data` columns
             for k, v in {
                 'open': open, 'close': close, 'high': high, 'low': low
             }.items():
@@ -73,6 +75,52 @@ class TimeSeries:
             self.low = data[low].copy()
 
             self.date = None if date is None else data[date].copy()
+            self.volume = None if volume is None else data[volume].copy()
 
-    def plot():
-        pass
+    def plot(self, plot_volume=True, show=True, subplot_kwargs=None):
+        """
+        Plots the data represented by this time series.
+
+        :param plot_volume: Whether to include the volume as a subplot.
+        Ignored if volume isn't present in this TimeSeries.
+        :param show: Whether the function should display the plot.
+        :param subplot_kwargs: Keyword arguments to be passed into `make_subplots`
+        while creating the price-volume grid. Ignored if `plot_volume` is False.
+        :returns: A plotly figure presenting this data. None if `show`
+        is True.
+        """
+
+        candle = go.Candlestick(
+            x=self.date,
+            open=self.open,
+            close=self.close,
+            high=self.high,
+            low=self.low,
+        )
+
+        if self.volume is not None and plot_volume:
+            if subplot_kwargs is None:
+                subplot_kwargs = {}
+
+            default_subplot_kwargs = {
+                'vertical_spacing': 0.03,
+                'row_width': (0.2, 0.7)
+            }
+ 
+            fig = make_subplots(
+                rows=2, cols=1, shared_xaxes=True,
+                **{**default_subplot_kwargs, **subplot_kwargs}
+            )
+            density = go.Bar(x=self.date, y=self.volume, showlegend=False)
+
+            fig.add_trace(candle, row=1, col=1)
+            fig.add_trace(density, row=2, col=1)
+            fig.update(layout_xaxis_rangeslider_visible=False)
+            fig.update_layout(xaxis2_rangeslider_visible=True)
+        else:
+            fig = go.Figure(data=[candle])
+
+        if show:
+            fig.show()
+        else:
+            return fig
