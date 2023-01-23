@@ -24,5 +24,5 @@ class PlotableIndicator:
     def process(self, time_series):
         raise NotImplemented
 
-    def plot(self, fig):
+    def plot(self):
         raise NotImplemented

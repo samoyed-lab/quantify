@@ -1,4 +1,6 @@
+import functools
 import pandas as pd
+
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
@@ -101,6 +103,7 @@ class TimeSeries:
             close=self.close,
             high=self.high,
             low=self.low,
+            name='Price'
         )
 
         if self.volume is not None and plot_volume:
@@ -124,6 +127,9 @@ class TimeSeries:
             fig.update_layout(xaxis2_rangeslider_visible=True)
         else:
             fig = go.Figure(data=[candle])
+
+        for k, v in self.indicators.items():
+            fig.append_trace(v.plot(self), row=1, col=1)
 
         if show:
             fig.show()
