@@ -2,6 +2,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+from .trend.facet import TimeSeriesAnalysisFacet
+
 
 class TimeSeries:
     """
@@ -77,6 +79,9 @@ class TimeSeries:
             self.date = None if date is None else data[date].copy()
             self.volume = None if volume is None else data[volume].copy()
 
+            self.indicators = {}
+            self.create = TimeSeriesAnalysisFacet(self)
+
     def plot(self, plot_volume=True, show=True, subplot_kwargs=None):
         """
         Plots the data represented by this time series.
@@ -124,3 +129,9 @@ class TimeSeries:
             fig.show()
         else:
             return fig
+
+    def drop_indicator(self, name):
+        pass
+
+    def register_indicator(self, name, indicator):
+        self.indicators[name] = indicator
