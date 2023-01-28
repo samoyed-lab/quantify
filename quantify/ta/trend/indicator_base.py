@@ -18,8 +18,8 @@ class PlotableIndicator:
     def __init__(self, name):
         self.name = name
 
-    def register(self, time_series):
-        time_series.register_indicator(self.name, self)
+    def add_to(self, time_series):
+        time_series.add_indicator(self.name, self)
 
     def process(self, time_series):
         raise NotImplemented

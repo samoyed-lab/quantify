@@ -7,16 +7,16 @@ from .utils import fillna
 
 
 @register_indicator
-class SimpleMovingAverage(PlotableIndicator):
+class ExponentialMovingAverage(PlotableIndicator):
 
     def __init__(self, window, fillna=False, name=None):
-        super().__init__(f'SMA-{window}' if name is None else name)
+        super().__init__(f'EMA-{window}' if name is None else name)
         self.window = window
         self.fillna = fillna
 
     def process(self, time_series):
-        self.data = time_series.close.rolling(
-            self.window,
+        self.data = time_series.close.ewm(
+            span=self.window,
             min_periods = 0 if self.fillna else self.window
         ).mean()
         fillna(self.data, self.fillna)

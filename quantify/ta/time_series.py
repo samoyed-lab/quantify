@@ -139,5 +139,5 @@ class TimeSeries:
     def drop_indicator(self, name):
         pass
 
-    def register_indicator(self, name, indicator):
+    def add_indicator(self, name, indicator):
         self.indicators[name] = indicator
