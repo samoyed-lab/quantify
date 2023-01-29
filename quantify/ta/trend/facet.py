@@ -17,9 +17,6 @@ class TimeSeriesAnalysisFacet:
         for indicator in ALL_FACET_INDICATORS:
             print(indicator.__name__)
             setattr(self, indicator.__name__, self.facet_wrap(indicator))
-            
-        # self.SimpleMovingAverage = self.facet_wrap(SimpleMovingAverage)
-        # self.ExponentialMovingAverage = self.facet_wrap(ExponentialMovingAverage)
 
     def facet_wrap(self, cls):
 
@@ -32,6 +29,7 @@ class TimeSeriesAnalysisFacet:
             if register:
                 instance.add_to(self.time_series)
 
-            return instance.process(self.time_series)
+            instance.process(self.time_series)
+            return instance
 
         return constructor
